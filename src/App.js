@@ -1,4 +1,5 @@
-import { Component, useState } from 'react';
+import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import './App.css';
 
@@ -13,14 +14,22 @@ import './App.css';
 //         }
 //     }
 
+//     componentDidMount() {
+//         document.title = `Slide : ${this.state.slide}`;
+//     }
+
+//     componentDidUpdate() {
+//         document.title = `Slide : ${this.state.slide}`;
+//     }
+
 //     changeSlide = (i) => {
-//         this.setState(({slide}) => ({
+//         this.setState(({ slide }) => ({
 //             slide: slide + i
 //         }))
 //     }
 
 //     toggleAutoplay = () => {
-//         this.setState(({autoplay}) => ({
+//         this.setState(({ autoplay }) => ({
 //             autoplay: !autoplay
 //         }))
 //     }
@@ -30,15 +39,15 @@ import './App.css';
 //             <Container>
 //                 <div className="slider w-50 m-auto">
 //                     <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
-//                     <div className="text-center mt-5">Active slide {this.state.slide} <br/> {this.state.autoplay ? 'auto' : null}</div>
+//                     <div className="text-center mt-5">Active slide {this.state.slide} <br /> {this.state.autoplay ? 'auto' : null}</div>
 //                     <div className="buttons mt-3">
-//                         <button 
+//                         <button
 //                             className="btn btn-primary me-2"
 //                             onClick={() => this.changeSlide(-1)}>-1</button>
-//                         <button 
+//                         <button
 //                             className="btn btn-primary me-2"
 //                             onClick={() => this.changeSlide(1)}>+1</button>
-//                         <button 
+//                         <button
 //                             className="btn btn-primary me-2"
 //                             onClick={this.toggleAutoplay}>toggle autoplay</button>
 //                     </div>
@@ -51,7 +60,6 @@ import './App.css';
 
 const calcValue = () => {
     console.log('random');
-
     return +(Math.random() * (50 - 1) + 1).toFixed(0)
 }
 
@@ -59,6 +67,26 @@ const Slider = (props) => {
 
     const [slide, setSlide] = useState(() => calcValue());
     const [autoplay, setAutoplay] = useState(false);
+
+    function logging() {
+        console.log('log!')
+    }
+
+    useEffect(() => {
+        console.log("effect");
+        document.title = `Slide : ${slide}`;
+
+        window.addEventListener('click', logging);
+
+        return () => {
+            window.removeEventListener('click', logging);
+        }
+
+    }, [slide]);
+
+    useEffect(()=>{
+console.log('autoplay');
+    }, [autoplay]);
 
     function changeSlide(i) {
         setSlide(slide => slide + i)
@@ -91,8 +119,14 @@ const Slider = (props) => {
 
 
 function App() {
+    const [slider, setSlider] = useState(true);
+
+
     return (
-        <Slider />
+        <>
+            <button onClick={() => setSlider(false)}>Click</button>
+            {slider ? <Slider /> : null}
+        </>
     );
 }
 
